@@ -1,10 +1,14 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     kotlin("jvm") version "1.8.0"
     application
+
+    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 group = "me.fapcs"
-version = "1.0-SNAPSHOT"
+version = "1.0"
 
 repositories {
     mavenCentral()
@@ -15,14 +19,18 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-core:2.14.1")
 }
 
-tasks.test {
-    useJUnitPlatform()
-}
+tasks {
+    withType<KotlinCompile> {
+        kotlinOptions {
+            jvmTarget = "16"
+        }
+    }
 
-kotlin {
-    jvmToolchain(16)
-}
+    build {
+        dependsOn("shadowJar")
+    }
 
-application {
-    mainClass.set("MainKt")
+    shadowJar {
+        archiveClassifier.set("me.fapcs.relay_agent.RelayAgent")
+    }
 }
