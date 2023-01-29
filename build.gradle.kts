@@ -12,11 +12,15 @@ version = "1.0"
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
-    implementation("org.apache.logging.log4j:log4j-api:2.14.1")
-    implementation("org.apache.logging.log4j:log4j-core:2.14.1")
+    api("me.fapcs:Shared:1.0")
+
+    api("io.javalin:javalin:5.3.1")
+
+    implementation("org.apache.logging.log4j:log4j-slf4j2-impl:2.19.0")
 }
 
 tasks {
@@ -31,6 +35,10 @@ tasks {
     }
 
     shadowJar {
-        archiveClassifier.set("me.fapcs.relay_agent.RelayAgent")
+        archiveClassifier.set("")
     }
+}
+
+application {
+    mainClass.set("me.fapcs.relay_agent.RelayAgent")
 }
