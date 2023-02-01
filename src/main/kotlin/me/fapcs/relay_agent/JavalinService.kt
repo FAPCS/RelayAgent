@@ -1,6 +1,9 @@
 package me.fapcs.relay_agent
 
 import io.javalin.Javalin
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import me.fapcs.shared.config.ConfigurationHandler
 import me.fapcs.shared.log.Logger
 import org.eclipse.jetty.websocket.api.Session
@@ -29,6 +32,16 @@ class JavalinService {
 
             ws.onMessage { ctx ->
                 Logger.info("Received message from ${ctx.sessionId}: ${ctx.message()}")
+                val message = ctx.message()
+
+                val json = Json.parseToJsonElement(message).jsonObject
+                val packet = json["packet"]?.jsonPrimitive?.content
+                if (packet == "KeepAlivePacket") {
+                    Logger.info("Received keep alive packet from ${ctx.sessionId}, ignoring...")
+                    return@onMessage
+                }
+
+                Logger.info("Forwarding message to all clients...")
                 sessions.filter { (it, _) -> it != ctx.sessionId }
                     .forEach { (_, session) -> session.remote.sendString(ctx.message()) }
             }
