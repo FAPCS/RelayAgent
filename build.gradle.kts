@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "me.fapcs"
-version = "0.0.0-dev.1"
+version = "0.0.0"
 
 repositories {
     mavenCentral()
@@ -16,7 +16,7 @@ repositories {
 }
 
 dependencies {
-    api("me.fapcs:Shared:1.0")
+    api("me.fapcs:Shared:0.0.0")
 
     api("io.javalin:javalin:5.3.1")
 
